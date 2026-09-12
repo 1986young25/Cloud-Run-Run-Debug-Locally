@@ -1,0 +1,12 @@
+{
+  "name": "NYMT Blackback Overlord",
+  "description": "Recursive command interface for the Nicholas Young Master Trust. Managing $5.407B in technology mass via Tetrahedral Twin Emulation and Genetic AI Mutation.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
