@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { toPng } from 'html-to-image';
 import {
   ResponsiveContainer,
   LineChart,
@@ -10,7 +11,7 @@ import {
   Legend,
   ReferenceLine
 } from 'recharts';
-import { AlertTriangle, Flame, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { AlertTriangle, Flame, ShieldAlert, CheckCircle2, Download, Camera } from 'lucide-react';
 import { ThresholdConfig, DEFAULT_THRESHOLDS } from './ThresholdSettingsModal';
 
 export interface TelemetryPoint {
@@ -103,6 +104,23 @@ export const TelemetryLineChart: React.FC<TelemetryLineChartProps> = ({
 
   const [historicalData, setHistoricalData] = useState<TelemetryPoint[]>([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState<boolean>(false);
+  const chartRef = useRef<HTMLDivElement>(null);
+
+  const handleSnapshot = useCallback(async () => {
+    if (chartRef.current === null) {
+      return;
+    }
+
+    try {
+      const dataUrl = await toPng(chartRef.current, { cacheBust: true, backgroundColor: '#111827' });
+      const link = document.createElement('a');
+      link.download = `telemetry_snapshot_${activeRange}_${new Date().toISOString()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Failed to create snapshot', err);
+    }
+  }, [activeRange]);
 
   // Analyze if any data points exceed user-defined thresholds
   const criticalCpuPoints = data.filter(d => d.cpu >= thresholdConfig.cpuThreshold);
@@ -150,6 +168,23 @@ export const TelemetryLineChart: React.FC<TelemetryLineChartProps> = ({
 
   // Determine which dataset to display
   const displayData = activeRange === 'realtime' ? data : (historicalData.length > 0 ? historicalData : data);
+
+  const handleExportCsv = () => {
+    const headers = ["time", "timestamp", "cpu", "ram", "disk"];
+    const csvContent = [
+      headers.join(","),
+      ...displayData.map(d => [d.time, d.timestamp, d.cpu, d.ram, d.disk].join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `telemetry_export_${activeRange}_${new Date().toISOString()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // Compute summary stats for current view
   const cpuValues = displayData.map(d => d.cpu);
@@ -200,7 +235,7 @@ export const TelemetryLineChart: React.FC<TelemetryLineChartProps> = ({
   };
 
   return (
-    <div className={`bg-gray-900/60 border rounded-2xl p-6 space-y-4 transition-colors ${
+    <div ref={chartRef} className={`bg-gray-900/60 border rounded-2xl p-6 space-y-4 transition-colors ${
       isSystemInCriticalAlert ? 'border-red-500/50 shadow-[0_0_30px_rgba(239,68,68,0.15)]' : 'border-cyan-500/30'
     }`}>
       {/* Header with Title, Status & Range Selector */}
@@ -237,7 +272,7 @@ export const TelemetryLineChart: React.FC<TelemetryLineChartProps> = ({
         {/* Controls: Time Range Selector + Live Stats */}
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
           
-          {/* Time Range Selector Buttons */}
+          {/* Time Range Selector Buttons & Export */}
           <div className="flex items-center bg-black/60 border border-gray-800 rounded-xl p-1 gap-1">
             <button
               onClick={() => handleRangeSelect('realtime')}
@@ -268,6 +303,21 @@ export const TelemetryLineChart: React.FC<TelemetryLineChartProps> = ({
               }`}
             >
               24 Hours
+            </button>
+            <div className="w-px h-4 bg-gray-800 mx-1"></div>
+            <button
+              onClick={handleSnapshot}
+              title="Capture Image Snapshot"
+              className="p-1.5 text-gray-400 hover:text-cyan-400 hover:bg-cyan-950/50 rounded-lg transition-all"
+            >
+              <Camera className="w-4 h-4" />
+            </button>
+            <button
+              onClick={handleExportCsv}
+              title="Export visible data to CSV"
+              className="p-1.5 text-gray-400 hover:text-cyan-400 hover:bg-cyan-950/50 rounded-lg transition-all"
+            >
+              <Download className="w-4 h-4" />
             </button>
           </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ResponsiveContainer,
   LineChart,
@@ -16,6 +16,7 @@ import { TelemetryPoint } from './TelemetryLineChart';
 
 interface TelemetryForecastChartProps {
   thresholdConfig?: ThresholdConfig;
+  onForecastWarning?: (message: string, level: 'warn' | 'critical') => void;
 }
 
 const ForecastTooltip = ({ active, payload, label, thresholdConfig }: any) => {
@@ -70,9 +71,11 @@ const ForecastTooltip = ({ active, payload, label, thresholdConfig }: any) => {
 
 export const TelemetryForecastChart: React.FC<TelemetryForecastChartProps> = ({
   thresholdConfig = DEFAULT_THRESHOLDS,
+  onForecastWarning
 }) => {
   const [forecastData, setForecastData] = useState<TelemetryPoint[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const previousBreachState = useRef({ cpu: false, ram: false });
 
   const fetchForecast = async () => {
     setIsLoading(true);
@@ -82,6 +85,29 @@ export const TelemetryForecastChart: React.FC<TelemetryForecastChartProps> = ({
         const json = await res.json();
         if (json.points && Array.isArray(json.points)) {
           setForecastData(json.points);
+          
+          if (onForecastWarning) {
+            const now = Date.now();
+            const next15MinPoints = json.points.filter((p: any) => {
+              const pTime = new Date(p.timestamp).getTime();
+              return (pTime - now) <= 16 * 60 * 1000;
+            });
+            
+            const cpuBreachPoint = next15MinPoints.find((p: any) => p.cpu >= thresholdConfig.cpuThreshold);
+            const ramBreachPoint = next15MinPoints.find((p: any) => p.ram >= thresholdConfig.ramThreshold);
+            
+            const currentCpuBreach = !!cpuBreachPoint;
+            const currentRamBreach = !!ramBreachPoint;
+
+            if (currentCpuBreach && !previousBreachState.current.cpu) {
+              onForecastWarning(`PREDICTIVE WARNING: CPU forecast indicates breach (${cpuBreachPoint.cpu}%) within 15 mins.`, 'critical');
+            }
+            if (currentRamBreach && !previousBreachState.current.ram) {
+              onForecastWarning(`PREDICTIVE WARNING: Memory forecast indicates breach (${ramBreachPoint.ram}%) within 15 mins.`, 'warn');
+            }
+
+            previousBreachState.current = { cpu: currentCpuBreach, ram: currentRamBreach };
+          }
         }
       }
     } catch (err) {

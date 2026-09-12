@@ -289,6 +289,54 @@ async function startServer() {
     }
   });
 
+  // TITAN MOCK ENDPOINTS
+  app.get("/api/titan/ledger", async (req, res) => {
+    try {
+      const { ledgerData } = await import("./utils/titanData.js");
+      res.json({ success: true, data: ledgerData });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to load ledger data" });
+    }
+  });
+
+  app.get("/api/titan/deployments", async (req, res) => {
+    try {
+      const { sectorDeployments } = await import("./utils/titanData.js");
+      res.json({ success: true, data: sectorDeployments });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to load deployments" });
+    }
+  });
+
+  app.get("/api/titan/mesh", async (req, res) => {
+    try {
+      const { meshNodes } = await import("./utils/titanData.js");
+      res.json({ success: true, data: meshNodes });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to load mesh nodes" });
+    }
+  });
+
+  app.get("/api/titan/context", async (req, res) => {
+    try {
+      const { entityContext, sowData } = await import("./utils/titanData.js");
+      res.json({ success: true, context: entityContext, sow: sowData });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to load entity context" });
+    }
+  });
+
+  // OTLP Trace Compute Simulation Endpoint
+  app.get("/compute", (req, res) => {
+    const elements = parseInt(req.query.elements as string) || 5000;
+    let result = 0;
+    // Simulate some compute to generate trace delay
+    for (let i = 0; i < elements; i++) {
+      result += Math.sin(i) * Math.cos(i);
+    }
+    res.json({ success: true, result, elements_computed: elements });
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

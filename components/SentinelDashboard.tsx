@@ -6,7 +6,10 @@ import { BinaryFrameData } from '../types';
 import { ThresholdSettingsModal, ThresholdConfig, DEFAULT_THRESHOLDS } from './ThresholdSettingsModal';
 import { LogStream, SystemLog } from './LogStream';
 import { TelemetryForecastChart } from './TelemetryForecastChart';
-import { Settings, ShieldAlert, X } from 'lucide-react';
+import { TitanOperationsPanel } from './TitanOperationsPanel';
+import { SystemHealthDiagnostic } from './SystemHealthDiagnostic';
+import { AcousticWaveVisualizer } from './AcousticWaveVisualizer';
+import { Settings, ShieldAlert, X, LayoutDashboard, Briefcase } from 'lucide-react';
 
 interface RevenueEvent {
   id: string;
@@ -47,6 +50,7 @@ const generateInitialHistory = (): TelemetryPoint[] => {
 
 const SentinelDashboard: React.FC = () => {
   // Real-time WebSocket Service State
+  const [activeTab, setActiveTab] = useState<'DASHBOARD' | 'TITAN_OPERATIONS'>('DASHBOARD');
   const [wsStatus, setWsStatus] = useState<'DISCONNECTED' | 'CONNECTING' | 'CONNECTED'>('DISCONNECTED');
   const [wsUrl, setWsUrl] = useState('ws://192.168.12.227:8765');
   const [useSimulation, setUseSimulation] = useState(true);
@@ -134,15 +138,35 @@ const SentinelDashboard: React.FC = () => {
 
   // Threshold Warning Logic
   useEffect(() => {
+    let breached = false;
+
     if (systemTelemetry.cpu >= thresholdConfig.cpuThreshold) {
       addSystemLog('critical', `CPU usage critically high at ${systemTelemetry.cpu}%`, 'telemetry');
       showToast(`CPU usage critically high at ${systemTelemetry.cpu}%`, 'critical');
+      breached = true;
     }
     if (systemTelemetry.ram >= thresholdConfig.ramThreshold) {
       addSystemLog('warn', `Memory usage warning at ${systemTelemetry.ram}%`, 'telemetry');
       showToast(`Memory usage high at ${systemTelemetry.ram}%`, 'warn');
+      breached = true;
     }
-  }, [systemTelemetry.cpu, systemTelemetry.ram, thresholdConfig.cpuThreshold, thresholdConfig.ramThreshold]);
+
+    if (breached && thresholdConfig.enableWebhook && thresholdConfig.webhookUrl) {
+      addSystemLog('info', `Automated Action: Webhook dispatched to ${thresholdConfig.webhookUrl}`, 'action_engine');
+      // Mock network request
+      fetch(thresholdConfig.webhookUrl, { 
+        method: 'POST', 
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event: 'threshold_breach', telemetry: systemTelemetry }) 
+      }).catch(() => {}); // Catch silent failure for mock URL
+    }
+
+    if ((systemTelemetry.cpu >= 98 || systemTelemetry.ram >= 98) && thresholdConfig.autoResetNodes) {
+      addSystemLog('critical', `Automated Action: Auto-resetting distressed physical nodes (>98% load)`, 'action_engine');
+      showToast('Hardware Reset Triggered', 'critical');
+    }
+  }, [systemTelemetry.cpu, systemTelemetry.ram, thresholdConfig]);
 
   // WebSocket Connection Handler
   const connectMiddleware = useCallback(() => {
@@ -383,6 +407,32 @@ const SentinelDashboard: React.FC = () => {
               Titan Node <span className="text-cyan-500">Alpha</span>
             </h1>
             <p className="text-xs text-cyan-500/80 uppercase tracking-widest font-bold mt-2">Operational Status: ACTIVE | Resonance: 3.69 Hz</p>
+            
+            {/* Tab Navigation */}
+            <div className="flex items-center gap-2 mt-6 pt-4 border-t border-gray-800/60">
+              <button
+                onClick={() => setActiveTab('DASHBOARD')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
+                  activeTab === 'DASHBOARD' 
+                    ? 'bg-cyan-950/80 text-cyan-400 border border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.15)]' 
+                    : 'bg-transparent text-gray-500 hover:text-gray-300 hover:bg-gray-900 border border-transparent'
+                }`}
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                Telemetry Core
+              </button>
+              <button
+                onClick={() => setActiveTab('TITAN_OPERATIONS')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
+                  activeTab === 'TITAN_OPERATIONS' 
+                    ? 'bg-indigo-950/80 text-indigo-400 border border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.15)]' 
+                    : 'bg-transparent text-gray-500 hover:text-gray-300 hover:bg-gray-900 border border-transparent'
+                }`}
+              >
+                <Briefcase className="w-4 h-4" />
+                Sovereign Operations
+              </button>
+            </div>
           </div>
           
           {/* WebSocket Connection Controls */}
@@ -432,10 +482,12 @@ const SentinelDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          
-          {/* 1. System Vitality */}
+        {activeTab === 'DASHBOARD' ? (
+          <>
+            {/* Dashboard Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              
+              {/* 1. System Vitality */}
           <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-6 space-y-4 hover:border-cyan-500/30 transition-colors">
             <div className="flex items-center gap-3 mb-2">
               <span className="text-cyan-500 font-black text-xl">1.</span>
@@ -533,7 +585,19 @@ const SentinelDashboard: React.FC = () => {
         />
 
         {/* 1H Predictive Forecast Chart */}
-        <TelemetryForecastChart thresholdConfig={thresholdConfig} />
+        <TelemetryForecastChart 
+          thresholdConfig={thresholdConfig} 
+          onForecastWarning={(msg, level) => {
+            addSystemLog(level, msg, 'predictive_engine');
+            showToast(msg, level);
+          }}
+        />
+
+        {/* System Health Diagnostic Matrix */}
+        <SystemHealthDiagnostic />
+
+        {/* 4D Acoustic Standing Wave Visualizer */}
+        <AcousticWaveVisualizer />
 
         {/* Log Stream Panel */}
         <LogStream 
@@ -637,6 +701,10 @@ const SentinelDashboard: React.FC = () => {
             </div>
           </div>
         </div>
+          </>
+        ) : (
+          <TitanOperationsPanel />
+        )}
 
         {/* Footer Authentication */}
         <div className="mt-8 pt-6 border-t border-gray-800 text-center space-y-2">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, X, AlertTriangle, Sliders, RotateCcw, Check, Sparkles, Database } from 'lucide-react';
+import { Settings, X, AlertTriangle, Sliders, RotateCcw, Check, Sparkles, Database, Zap, Link } from 'lucide-react';
 
 export interface ThresholdConfig {
   cpuThreshold: number;
@@ -9,6 +9,9 @@ export interface ThresholdConfig {
   showCriticalBanner: boolean;
   autoClearLogs: boolean;
   logRetentionDays: number;
+  enableWebhook: boolean;
+  webhookUrl: string;
+  autoResetNodes: boolean;
 }
 
 export const DEFAULT_THRESHOLDS: ThresholdConfig = {
@@ -19,6 +22,9 @@ export const DEFAULT_THRESHOLDS: ThresholdConfig = {
   showCriticalBanner: true,
   autoClearLogs: true,
   logRetentionDays: 7,
+  enableWebhook: false,
+  webhookUrl: '',
+  autoResetNodes: false,
 };
 
 interface ThresholdSettingsModalProps {
@@ -208,6 +214,51 @@ export const ThresholdSettingsModal: React.FC<ThresholdSettingsModalProps> = ({
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+
+          {/* Automated Actions */}
+          <div className="bg-black/40 border border-gray-800 rounded-xl p-4 space-y-4">
+            <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Zap className="w-3.5 h-3.5 text-yellow-400" />
+              Automated Response Actions
+            </div>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="flex items-center justify-between cursor-pointer group">
+                  <span className="text-xs text-gray-300 group-hover:text-white">Execute Webhook on Breach</span>
+                  <input
+                    type="checkbox"
+                    checked={localConfig.enableWebhook}
+                    onChange={(e) => setLocalConfig(prev => ({ ...prev, enableWebhook: e.target.checked }))}
+                    className="w-4 h-4 rounded bg-gray-900 border-gray-700 text-cyan-500 focus:ring-0 cursor-pointer"
+                  />
+                </label>
+                {localConfig.enableWebhook && (
+                  <div className="flex items-center gap-2 pl-2 border-l-2 border-gray-800 ml-1">
+                    <Link className="w-4 h-4 text-gray-500" />
+                    <input
+                      type="url"
+                      placeholder="https://api.endpoint.com/webhook"
+                      value={localConfig.webhookUrl}
+                      onChange={(e) => setLocalConfig(prev => ({ ...prev, webhookUrl: e.target.value }))}
+                      className="w-full bg-gray-900 border border-gray-700 text-gray-300 text-xs rounded-lg px-2 py-1.5 focus:outline-none focus:border-cyan-500 transition-colors"
+                    />
+                  </div>
+                )}
+              </div>
+              <label className="flex items-center justify-between cursor-pointer group pt-2 border-t border-gray-800/50">
+                <div className="flex flex-col">
+                  <span className="text-xs text-gray-300 group-hover:text-white">Auto-Reset Distressed Nodes</span>
+                  <span className="text-[9px] text-gray-500 mt-0.5">Triggers hardware restart logic if load exceeds 98%</span>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={localConfig.autoResetNodes}
+                  onChange={(e) => setLocalConfig(prev => ({ ...prev, autoResetNodes: e.target.checked }))}
+                  className="w-4 h-4 rounded bg-gray-900 border-gray-700 text-red-500 focus:ring-0 cursor-pointer"
+                />
+              </label>
             </div>
           </div>
         </div>
