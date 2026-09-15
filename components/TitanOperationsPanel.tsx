@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Network, Database, ShieldAlert, Server, Activity, FileText } from 'lucide-react';
+import { ConglomerateRoleMatrix } from './ConglomerateRoleMatrix';
 
 export const TitanOperationsPanel: React.FC = () => {
   const [ledgerData, setLedgerData] = useState<any[]>([]);
@@ -42,6 +43,11 @@ export const TitanOperationsPanel: React.FC = () => {
 
       {/* Grid for Mesh and SOW */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      {/* Conglomerate Architect Role Matrix */}
+      <div className="lg:col-span-2">
+        <ConglomerateRoleMatrix />
+      </div>
         
         {/* Mesh Fleet Status */}
         <div className="bg-gray-900/40 border border-indigo-500/20 rounded-xl p-5">

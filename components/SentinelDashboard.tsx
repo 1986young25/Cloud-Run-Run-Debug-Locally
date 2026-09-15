@@ -9,6 +9,7 @@ import { TelemetryForecastChart } from './TelemetryForecastChart';
 import { TitanOperationsPanel } from './TitanOperationsPanel';
 import { SystemHealthDiagnostic } from './SystemHealthDiagnostic';
 import { AcousticWaveVisualizer } from './AcousticWaveVisualizer';
+import { CostAnalysisReport } from './CostAnalysisReport';
 import { Settings, ShieldAlert, X, LayoutDashboard, Briefcase } from 'lucide-react';
 
 interface RevenueEvent {
@@ -595,6 +596,9 @@ const SentinelDashboard: React.FC = () => {
 
         {/* System Health Diagnostic Matrix */}
         <SystemHealthDiagnostic />
+
+        {/* Cost Analysis Report (Cost to Reproduce) */}
+        <CostAnalysisReport />
 
         {/* 4D Acoustic Standing Wave Visualizer */}
         <AcousticWaveVisualizer />

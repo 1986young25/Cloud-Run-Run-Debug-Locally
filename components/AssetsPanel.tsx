@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { motion } from 'motion/react';
+import { GooglePickerWidget } from './GooglePickerWidget';
 
 const AssetsPanel: React.FC = () => {
   const assets = [
@@ -34,7 +35,13 @@ const AssetsPanel: React.FC = () => {
 
         {/* Major Asset Table */}
         <div className="grid grid-cols-1 gap-4">
-          <div className="grid grid-cols-12 px-6 py-2 text-[10px] uppercase font-bold text-gray-500 tracking-wider">
+          <div className="flex items-center justify-between px-6 py-2">
+            <h2 className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Asset Component Ledger</h2>
+          </div>
+          
+          <GooglePickerWidget />
+
+          <div className="grid grid-cols-12 px-6 py-2 text-[10px] uppercase font-bold text-gray-500 tracking-wider mt-4">
             <div className="col-span-4">Asset Component</div>
             <div className="col-span-2">Previous</div>
             <div className="col-span-2">Delta (Blackback)</div>

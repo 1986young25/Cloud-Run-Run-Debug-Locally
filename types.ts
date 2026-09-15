@@ -8,7 +8,8 @@ export enum AppTab {
   ASSETS = 'assets',
   OVERLORD = 'overlord',
   NEXUS = 'nexus',
-  SENTINEL = 'sentinel'
+  SENTINEL = 'sentinel',
+  COMPLIANCE_AUDIT = 'compliance_audit'
 }
 
 export interface ChatMessage {
@@ -56,4 +57,11 @@ export interface MatrixSetterState {
   streamRateHz: number;
   activePreset?: string;
   autoIncrement: boolean;
+}
+
+declare global {
+  interface Window {
+    gapi: any;
+    google: any;
+  }
 }

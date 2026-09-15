@@ -14,6 +14,8 @@ googleAuthProvider.addScope('https://www.googleapis.com/auth/drive');
 googleAuthProvider.addScope('https://mail.google.com/');
 googleAuthProvider.addScope('https://www.googleapis.com/auth/documents');
 googleAuthProvider.addScope('https://www.googleapis.com/auth/forms.body');
+googleAuthProvider.addScope('https://www.googleapis.com/auth/drive.file');
+googleAuthProvider.addScope('https://www.googleapis.com/auth/drive.metadata.readonly');
 
 let cachedAccessToken: string | null = null;
 let isSigningIn = false;
