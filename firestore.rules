@@ -27,6 +27,14 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+
+    match /_connection_test/{document=**} {
+      allow read: if true;
+    }
+    
+    match /test/{document=**} {
+      allow read: if true;
+    }
     
     // Users collection
     match /users/{userId} {

@@ -6,6 +6,23 @@ interface AuditLogEntry {
   message: string;
 }
 
+interface TwinData {
+  status: string;
+  role: string;
+  geneticKey: string;
+}
+
+type TwinKey = 'ALPHA' | 'BETA' | 'GAMMA' | 'DELTA';
+
+const TWIN_KEYS: TwinKey[] = ['ALPHA', 'BETA', 'GAMMA', 'DELTA'];
+
+const INITIAL_TWINS: Record<TwinKey, TwinData> = {
+  ALPHA: { status: 'OFFLINE', role: 'Operational_Reality_Mirror', geneticKey: '' },
+  BETA: { status: 'OFFLINE', role: 'Hostile_Acquisition_Sandbox', geneticKey: '' },
+  GAMMA: { status: 'OFFLINE', role: 'Administrative_Friction_Honeypot', geneticKey: '' },
+  DELTA: { status: 'OFFLINE', role: 'Genetic_Evolution_Forecaster', geneticKey: '' },
+};
+
 const VisionNodePanel: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -19,12 +36,7 @@ const VisionNodePanel: React.FC = () => {
   const [impedance] = useState(376.5);
   const [hoveredFilter, setHoveredFilter] = useState<string | null>(null);
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([]);
-  const [twins, setTwins] = useState({
-    ALPHA: { status: 'OFFLINE', role: 'Operational_Reality_Mirror', geneticKey: '' },
-    BETA: { status: 'OFFLINE', role: 'Hostile_Acquisition_Sandbox', geneticKey: '' },
-    GAMMA: { status: 'OFFLINE', role: 'Administrative_Friction_Honeypot', geneticKey: '' },
-    DELTA: { status: 'OFFLINE', role: 'Genetic_Evolution_Forecaster', geneticKey: '' },
-  });
+  const [twins, setTwins] = useState<Record<TwinKey, TwinData>>(INITIAL_TWINS);
 
   const NODE_ID = "G.V. NODE-Σ-2026/TITAN";
   const ROOT_ADDRESS = "115 East Southfield Drive, Jackson, MI";
@@ -61,9 +73,8 @@ const VisionNodePanel: React.FC = () => {
 
   const recursiveSync = async () => {
     addAuditLog("--- INITIATING TETRAHEDRAL SYNC ---");
-    const twinKeys = Object.keys(twins) as Array<keyof typeof twins>;
     
-    for (const key of twinKeys) {
+    for (const key of TWIN_KEYS) {
       await new Promise(resolve => setTimeout(resolve, 300));
       setTwins(prev => ({
         ...prev,
@@ -78,9 +89,8 @@ const VisionNodePanel: React.FC = () => {
 
   const mutateGeneticAI = async () => {
     addAuditLog("--- DEPLOYING GENETIC DNA MUTATION ---");
-    const twinKeys = Object.keys(twins) as Array<keyof typeof twins>;
     
-    for (const key of twinKeys) {
+    for (const key of TWIN_KEYS) {
       const mutationKey = Math.random().toString(36).substring(2, 10).toUpperCase();
       setTwins(prev => ({
         ...prev,
@@ -342,7 +352,7 @@ const VisionNodePanel: React.FC = () => {
               <div>
                 <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Tetrahedral Twins</h3>
                 <div className="grid grid-cols-2 gap-2">
-                  {Object.entries(twins).map(([key, data]) => (
+                  {(Object.entries(twins) as [TwinKey, TwinData][]).map(([key, data]) => (
                     <div key={key} className="p-3 bg-black/40 border border-gray-800 rounded-xl space-y-1">
                       <div className="flex justify-between items-center">
                         <span className="text-[10px] font-black text-white">{key}</span>

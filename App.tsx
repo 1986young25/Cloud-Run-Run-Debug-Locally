@@ -13,6 +13,9 @@ import OverlordPanel from './components/OverlordPanel';
 import SentinelDashboard from './components/SentinelDashboard';
 import NexusPortal from './components/NexusPortal';
 import { ComplianceAuditPanel } from './components/ComplianceAuditPanel';
+import { CommercialServicesMatrix } from './components/CommercialServicesMatrix';
+import { AcousticWaveEnclave } from './components/AcousticWaveEnclave';
+import { GoogleClassroomPanel } from './components/GoogleClassroomPanel';
 import { auditStore } from './utils/auditStore';
 
 const App: React.FC = () => {
@@ -63,11 +66,17 @@ const App: React.FC = () => {
       case AppTab.OVERLORD:
         return <OverlordPanel />;
       case AppTab.SENTINEL:
-        return <SentinelDashboard />;
+        return <SentinelDashboard onNavigate={setActiveTab} />;
+      case AppTab.ACOUSTIC_WAVE:
+        return <AcousticWaveEnclave onNavigate={setActiveTab} />;
+      case AppTab.CLASSROOM:
+        return <GoogleClassroomPanel />;
       case AppTab.NEXUS:
         return <NexusPortal />;
       case AppTab.COMPLIANCE_AUDIT:
         return <ComplianceAuditPanel />;
+      case AppTab.COMMERCIAL_MATRIX:
+        return <CommercialServicesMatrix />;
       default:
         return <ChatPanel />;
     }

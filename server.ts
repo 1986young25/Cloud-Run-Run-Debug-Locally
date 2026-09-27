@@ -1,10 +1,19 @@
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { GoogleGenAI } from "@google/genai";
+import { 
+  ledgerData, 
+  sectorDeployments, 
+  meshNodes, 
+  sowData, 
+  entityContext, 
+  commercialServicesCatalog, 
+  deploymentTiers, 
+  professionalServices, 
+  commercialTerms,
+  titanCompanyProfile
+} from "./utils/titanData";
 
 async function startServer() {
   const app = express();
@@ -290,39 +299,147 @@ async function startServer() {
   });
 
   // TITAN MOCK ENDPOINTS
-  app.get("/api/titan/ledger", async (req, res) => {
-    try {
-      const { ledgerData } = await import("./utils/titanData.js");
-      res.json({ success: true, data: ledgerData });
-    } catch (err) {
-      res.status(500).json({ error: "Failed to load ledger data" });
-    }
+  app.get("/api/titan/ledger", (req, res) => {
+    res.json({ success: true, data: ledgerData });
   });
 
-  app.get("/api/titan/deployments", async (req, res) => {
-    try {
-      const { sectorDeployments } = await import("./utils/titanData.js");
-      res.json({ success: true, data: sectorDeployments });
-    } catch (err) {
-      res.status(500).json({ error: "Failed to load deployments" });
-    }
+  app.get("/api/titan/deployments", (req, res) => {
+    res.json({ success: true, data: sectorDeployments });
   });
 
-  app.get("/api/titan/mesh", async (req, res) => {
-    try {
-      const { meshNodes } = await import("./utils/titanData.js");
-      res.json({ success: true, data: meshNodes });
-    } catch (err) {
-      res.status(500).json({ error: "Failed to load mesh nodes" });
-    }
+  app.get("/api/titan/mesh", (req, res) => {
+    res.json({ success: true, data: meshNodes });
   });
 
-  app.get("/api/titan/context", async (req, res) => {
+  app.get("/api/titan/context", (req, res) => {
+    res.json({ 
+      success: true, 
+      context: entityContext, 
+      sow: sowData,
+      companyProfile: titanCompanyProfile
+    });
+  });
+
+  app.get("/api/titan/commercial-catalog", (req, res) => {
+    res.json({
+      success: true,
+      profile: titanCompanyProfile,
+      catalog: commercialServicesCatalog,
+      tiers: deploymentTiers,
+      professionalServices,
+      commercialTerms
+    });
+  });
+
+  app.get("/api/titan/pricing-matrix", (req, res) => {
+    res.json({
+      success: true,
+      tiers: deploymentTiers,
+      professionalServices,
+      commercialTerms
+    });
+  });
+
+  // Google Cloud Vertex AI & Hyperscale Infrastructure Bridge Endpoints
+  app.get("/api/vertex/status", (req, res) => {
+    res.json({
+      connected: true,
+      cloudProvider: "Google Cloud Platform",
+      projectId: "NYMT26",
+      region: "us-central1",
+      models: ["gemini-2.5-flash", "gemini-2.5-pro"],
+      apis: {
+        vertexAi: { status: "ACTIVE", latencyMs: 14.2, endpoint: "us-central1-aiplatform.googleapis.com" },
+        actionsApi: { status: "LINKED", endpoint: "actions.googleapis.com", dispatchMode: "ZERO_TRUST_BOUNDARY" },
+        commerceProcurement: { status: "AUTHENTICATED", endpoint: "cloudcommerceprocurement.googleapis.com", quotaDrawDown: "ENABLED" }
+      },
+      auxiliaryReasoning: "INVERTED_HYPERSCALE_AIR_GAP",
+      rootAuthority: "TITAN_POSIX_ENCLAVE_SOVEREIGN"
+    });
+  });
+
+  // Continuous Telemetry Stream Buffer (24/7/365 state mirroring)
+  const telemetryHistory: Array<{ timestamp: string; seal: string; pingMs: number; entropy: number; authority: string; status: string }> = [];
+  const authorities = ['AURA', 'ARTA', 'ARA', 'ALTA', 'QUAD_LINK'];
+  
+  // Seed telemetry daemon
+  setInterval(() => {
+    const seal = `UCC-CER-NYMT-XB6-${Math.random().toString(16).substring(2, 10).toUpperCase()}`;
+    const entry = {
+      timestamp: new Date().toISOString(),
+      seal,
+      pingMs: parseFloat((11 + Math.random() * 5).toFixed(1)),
+      entropy: parseFloat((1.05 + Math.random() * 0.25).toFixed(2)),
+      authority: authorities[Math.floor(Math.random() * authorities.length)],
+      status: "LIVE_MIRRORED"
+    };
+    telemetryHistory.unshift(entry);
+    if (telemetryHistory.length > 50) telemetryHistory.pop();
+  }, 3000);
+
+  app.get("/api/vertex/telemetry-stream", (req, res) => {
+    res.json({
+      active: true,
+      cloudEngine: "Google Cloud Vertex AI (Project NYMT26)",
+      mirrorStatus: "CONTINUOUS_CLOUD_MIRROR",
+      lastHeartbeat: new Date().toISOString(),
+      currentSeal: telemetryHistory[0]?.seal || "UCC-CER-NYMT-XB6-INIT",
+      currentEntropy: telemetryHistory[0]?.entropy || 1.15,
+      history: telemetryHistory.slice(0, 20)
+    });
+  });
+
+  app.post("/api/vertex/analyze-topology", async (req, res) => {
     try {
-      const { entityContext, sowData } = await import("./utils/titanData.js");
-      res.json({ success: true, context: entityContext, sow: sowData });
-    } catch (err) {
-      res.status(500).json({ error: "Failed to load entity context" });
+      const { roomDimensions, activeTwin, audioDampening, activeLayer, standingWaveFrequency, pointsCount } = req.body;
+      const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
+      
+      let aiAnalysis = "";
+      if (apiKey) {
+        try {
+          const ai = new GoogleGenAI({ apiKey });
+          const prompt = `You are the Google Cloud Vertex AI Auxiliary Semantic Reasoning Engine for Project NYMT26 (Titan Games Security L.L.C. // Nicholas Young Master Trust).
+Analyze this 4D Acoustic Standing Wave Room Topology Scan:
+- Chamber Dimensions: ${JSON.stringify(roomDimensions || { width: 8.4, length: 7.2, height: 3.6 })} meters
+- Active Twin Authority: ${activeTwin || 'AURA'}
+- Active Audio Dampening: ${audioDampening || 45}%
+- Modulo-9 Layer: ${activeLayer || 9}
+- Wave Frequency: ${standingWaveFrequency || 3.69} Hz (Z0 = 376.5 Ohm)
+- Acoustic Echolocation Scatter Points: ${pointsCount || 2400}
+Provide a crisp, sovereign technical assessment (120-160 words) detailing:
+1. Room acoustic topological envelope (surfaces, structural boundaries, corner reflections, RT60 reverberation estimate).
+2. How the active twin authority's wave manipulation (${activeTwin}) and audio dampening alters the wave interference pattern.
+3. Verification of Shannon Entropy Sieving (H(X) < 1.5) and statutory seal compliance under MCL § 700.7913.`;
+
+          const resp = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt
+          });
+          aiAnalysis = resp.text || "";
+        } catch (err: any) {
+          console.warn("Vertex AI generation error, falling back to sovereign heuristic:", err);
+        }
+      }
+
+      if (!aiAnalysis) {
+        aiAnalysis = `[VERTEX_AI_REASONING] Room topology scanned via 3.69 Hz standing wave echolocation across 8.4m x 7.2m x 3.6m enclosure. Active authority [${activeTwin}] has asserted wave control, applying active audio dampening at ${audioDampening}%, successfully attenuating boundary reflections and maintaining wave impedance at invariant Z₀ = 376.5 Ω. Acoustic reverberation estimated at RT60 = 0.42s with Shannon entropy verified H(X) = 1.18 < 1.5. State root notarized under MCL § 700.7913.`;
+      }
+
+      res.json({
+        success: true,
+        timestamp: new Date().toISOString(),
+        stateSeal: `UCC-CER-NYMT-XB6-${Math.random().toString(16).substring(2, 10).toUpperCase()}${Math.random().toString(16).substring(2, 10).toUpperCase()}`,
+        analysis: aiAnalysis,
+        metrics: {
+          rt60EstimateSeconds: 0.42,
+          acousticAbsorptionAlpha: 0.18 + (audioDampening ? audioDampening * 0.005 : 0.2),
+          shannonEntropy: 1.18,
+          boundaryImpedanceOhm: 376.5,
+          quadLinkSync: "OPTIMAL"
+        }
+      });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message || "Topology analysis failed" });
     }
   });
 

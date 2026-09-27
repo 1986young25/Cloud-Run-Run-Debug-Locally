@@ -19,8 +19,16 @@ const Header: React.FC<HeaderProps> = ({ activeTab }) => {
         return { title: 'Voice Concierge', subtitle: 'Low-latency natural audio conversations' };
       case AppTab.VISION_NODE:
         return { title: 'Sovereign Vision Node', subtitle: 'ARK-SIGMA 2026 Fiduciary Intelligence' };
+      case AppTab.ACOUSTIC_WAVE:
+        return { title: 'Acoustic Standing Wave & Spatial Echolocation Enclave', subtitle: '3.69 Hz Resonance & Ultrasonic Tomography // 3D Wave Immersion & Object Discrimination' };
+      case AppTab.CLASSROOM:
+        return { title: 'Google Classroom // Sovereign Academy Cadet Enclave', subtitle: 'Classroom API v1 & Cadet Coursework Synchronization // Second Chance Sovereign Forge' };
+      case AppTab.COMMERCIAL_MATRIX:
+        return { title: 'Commercial Matrix & Procurement Suite', subtitle: 'Titan Games Security L.L.C. Deployment Tiers & Covenants' };
+      case AppTab.COMPLIANCE_AUDIT:
+        return { title: 'Compliance Audit & Statutory Ledgers', subtitle: 'MCL § 700.7913 & UCC State-Root Anchoring' };
       default:
-        return { title: 'Dashboard', subtitle: '' };
+        return { title: 'Sentinel Dashboard', subtitle: 'Cyber-Physical Edge Telemetry & Real-Time Hardline State' };
     }
   };
 

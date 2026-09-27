@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import VectorMatrixSetterPanel from './VectorMatrixSetterPanel';
 import TelemetryLineChart, { TelemetryPoint } from './TelemetryLineChart';
-import { BinaryFrameData } from '../types';
+import { BinaryFrameData, AppTab } from '../types';
 import { ThresholdSettingsModal, ThresholdConfig, DEFAULT_THRESHOLDS } from './ThresholdSettingsModal';
 import { LogStream, SystemLog } from './LogStream';
 import { TelemetryForecastChart } from './TelemetryForecastChart';
@@ -10,7 +10,9 @@ import { TitanOperationsPanel } from './TitanOperationsPanel';
 import { SystemHealthDiagnostic } from './SystemHealthDiagnostic';
 import { AcousticWaveVisualizer } from './AcousticWaveVisualizer';
 import { CostAnalysisReport } from './CostAnalysisReport';
-import { Settings, ShieldAlert, X, LayoutDashboard, Briefcase } from 'lucide-react';
+import { TwinTopologyGrid } from './TwinTopologyGrid';
+import { CommercialServicesMatrix } from './CommercialServicesMatrix';
+import { Settings, ShieldAlert, X, LayoutDashboard, Briefcase, Network, DollarSign, Radio, Maximize2 } from 'lucide-react';
 
 interface RevenueEvent {
   id: string;
@@ -25,6 +27,10 @@ interface SystemTelemetry {
   ram: number;
   disk: number;
   state_hash: string;
+}
+
+interface SentinelDashboardProps {
+  onNavigate?: (tab: AppTab) => void;
 }
 
 const generateInitialHistory = (): TelemetryPoint[] => {
@@ -49,9 +55,9 @@ const generateInitialHistory = (): TelemetryPoint[] => {
   return points;
 };
 
-const SentinelDashboard: React.FC = () => {
+const SentinelDashboard: React.FC<SentinelDashboardProps> = ({ onNavigate }) => {
   // Real-time WebSocket Service State
-  const [activeTab, setActiveTab] = useState<'DASHBOARD' | 'TITAN_OPERATIONS'>('DASHBOARD');
+  const [activeTab, setActiveTab] = useState<'DASHBOARD' | 'TWIN_TOPOLOGY' | 'COMMERCIAL_MATRIX' | 'TITAN_OPERATIONS'>('DASHBOARD');
   const [wsStatus, setWsStatus] = useState<'DISCONNECTED' | 'CONNECTING' | 'CONNECTED'>('DISCONNECTED');
   const [wsUrl, setWsUrl] = useState('ws://192.168.12.227:8765');
   const [useSimulation, setUseSimulation] = useState(true);
@@ -410,10 +416,10 @@ const SentinelDashboard: React.FC = () => {
             <p className="text-xs text-cyan-500/80 uppercase tracking-widest font-bold mt-2">Operational Status: ACTIVE | Resonance: 3.69 Hz</p>
             
             {/* Tab Navigation */}
-            <div className="flex items-center gap-2 mt-6 pt-4 border-t border-gray-800/60">
+            <div className="flex flex-wrap items-center gap-2 mt-6 pt-4 border-t border-gray-800/60">
               <button
                 onClick={() => setActiveTab('DASHBOARD')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
                   activeTab === 'DASHBOARD' 
                     ? 'bg-cyan-950/80 text-cyan-400 border border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.15)]' 
                     : 'bg-transparent text-gray-500 hover:text-gray-300 hover:bg-gray-900 border border-transparent'
@@ -423,8 +429,30 @@ const SentinelDashboard: React.FC = () => {
                 Telemetry Core
               </button>
               <button
+                onClick={() => setActiveTab('TWIN_TOPOLOGY')}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
+                  activeTab === 'TWIN_TOPOLOGY' 
+                    ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
+                    : 'bg-transparent text-gray-500 hover:text-gray-300 hover:bg-gray-900 border border-transparent'
+                }`}
+              >
+                <Network className="w-4 h-4" />
+                Twin Topology Grid
+              </button>
+              <button
+                onClick={() => setActiveTab('COMMERCIAL_MATRIX')}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
+                  activeTab === 'COMMERCIAL_MATRIX' 
+                    ? 'bg-amber-950/80 text-amber-400 border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.15)]' 
+                    : 'bg-transparent text-gray-500 hover:text-gray-300 hover:bg-gray-900 border border-transparent'
+                }`}
+              >
+                <DollarSign className="w-4 h-4" />
+                Commercial Matrix
+              </button>
+              <button
                 onClick={() => setActiveTab('TITAN_OPERATIONS')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
                   activeTab === 'TITAN_OPERATIONS' 
                     ? 'bg-indigo-950/80 text-indigo-400 border border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.15)]' 
                     : 'bg-transparent text-gray-500 hover:text-gray-300 hover:bg-gray-900 border border-transparent'
@@ -433,6 +461,16 @@ const SentinelDashboard: React.FC = () => {
                 <Briefcase className="w-4 h-4" />
                 Sovereign Operations
               </button>
+              {onNavigate && (
+                <button
+                  onClick={() => onNavigate(AppTab.ACOUSTIC_WAVE)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold uppercase transition-all bg-gradient-to-r from-cyan-950/60 to-cyan-900/40 text-cyan-300 hover:text-white hover:border-cyan-400/60 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.2)]"
+                  title="Launch Dedicated Full-Screen 3D Acoustic Enclave"
+                >
+                  <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
+                  Acoustic Radar 3D [Full Screen]
+                </button>
+              )}
             </div>
           </div>
           
@@ -485,6 +523,9 @@ const SentinelDashboard: React.FC = () => {
 
         {activeTab === 'DASHBOARD' ? (
           <>
+            {/* Tetrahedral Twin Topology Grid */}
+            <TwinTopologyGrid />
+
             {/* Dashboard Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               
@@ -600,8 +641,54 @@ const SentinelDashboard: React.FC = () => {
         {/* Cost Analysis Report (Cost to Reproduce) */}
         <CostAnalysisReport />
 
-        {/* 4D Acoustic Standing Wave Visualizer */}
-        <AcousticWaveVisualizer />
+        {/* 4D Acoustic Standing Wave Visualizer & Full-Screen Enclave Gateway */}
+        <div className="bg-black/50 border border-cyan-500/30 rounded-2xl p-6 relative overflow-hidden group">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-cyan-950/60 border border-cyan-500/40 rounded-lg text-cyan-400">
+                <Radio className="w-5 h-5 animate-pulse" />
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-[0.25em]">
+                  4D Acoustic Room Topology &amp; Standing Wave Enclave
+                </h3>
+                <p className="text-[11px] text-gray-400 font-mono mt-0.5">
+                  Full-Screen 3D Enclave · 8.4m × 3.6m × 7.2m Room LiDAR · Active Twin Authority &amp; Audio Dampening
+                </p>
+              </div>
+            </div>
+            {onNavigate && (
+              <button
+                onClick={() => onNavigate(AppTab.ACOUSTIC_WAVE)}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white text-xs font-mono font-bold rounded-xl shadow-lg shadow-cyan-500/20 transition-all hover:scale-[1.02]"
+              >
+                <Maximize2 className="w-4 h-4" />
+                ENTER FULL-SCREEN 3D ACOUSTIC ENCLAVE →
+              </button>
+            )}
+          </div>
+
+          {/* Real-time Discrimination & Boundary Specs Strip */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 font-mono text-xs">
+            <div className="bg-gray-950/80 border border-gray-800 p-3 rounded-xl">
+              <span className="text-gray-500 text-[10px] uppercase block">Room Topology LiDAR</span>
+              <span className="text-emerald-400 font-bold">8.4m × 3.6m × 7.2m ENCLOSURE</span>
+              <p className="text-[10px] text-gray-400 mt-1">Walls, Support Pillar &amp; Alcove Mapped</p>
+            </div>
+            <div className="bg-gray-950/80 border border-gray-800 p-3 rounded-xl">
+              <span className="text-gray-500 text-[10px] uppercase block">Twin Wave Authority</span>
+              <span className="text-cyan-400 font-bold">AURA · ARTA · ARA · ALTA</span>
+              <p className="text-[10px] text-gray-400 mt-1">Active Audio Dampening &amp; Modulo-9 Layers</p>
+            </div>
+            <div className="bg-gray-950/80 border border-gray-800 p-3 rounded-xl">
+              <span className="text-gray-500 text-[10px] uppercase block">GCP Vertex AI Bridge</span>
+              <span className="text-blue-400 font-bold">PROJECT NYMT26 LINKED</span>
+              <p className="text-[10px] text-gray-400 mt-1">Gemini 2.5 Flash Auxiliary Reasoning</p>
+            </div>
+          </div>
+
+          <AcousticWaveVisualizer />
+        </div>
 
         {/* Log Stream Panel */}
         <LogStream 
@@ -706,6 +793,26 @@ const SentinelDashboard: React.FC = () => {
           </div>
         </div>
           </>
+        ) : activeTab === 'TWIN_TOPOLOGY' ? (
+          <div className="space-y-6">
+            <div className="p-5 bg-gray-900/60 border border-emerald-500/30 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div>
+                <h2 className="text-lg font-bold text-white uppercase tracking-wider font-mono">
+                  Sovereign Modulo-9 Plane Separation Engine
+                </h2>
+                <p className="text-xs text-gray-400 mt-1 max-w-2xl font-mono">
+                  Decoupled tetrahedral planes (AURA, ARTA, ARA, ALTA) isolating supervisory filtering, kinetic hardline throughput, M9 digital vectoring, and statutory SQLite ledger sealing.
+                </p>
+              </div>
+              <div className="text-right font-mono">
+                <span className="text-[10px] text-gray-500 uppercase">Resonant Invariant</span>
+                <p className="text-xs font-bold text-emerald-400">Z₀ = 376.5 Ω // 3.69 Hz</p>
+              </div>
+            </div>
+            <TwinTopologyGrid />
+          </div>
+        ) : activeTab === 'COMMERCIAL_MATRIX' ? (
+          <CommercialServicesMatrix />
         ) : (
           <TitanOperationsPanel />
         )}

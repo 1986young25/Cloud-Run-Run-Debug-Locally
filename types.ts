@@ -9,7 +9,10 @@ export enum AppTab {
   OVERLORD = 'overlord',
   NEXUS = 'nexus',
   SENTINEL = 'sentinel',
-  COMPLIANCE_AUDIT = 'compliance_audit'
+  ACOUSTIC_WAVE = 'acoustic_wave',
+  CLASSROOM = 'classroom',
+  COMPLIANCE_AUDIT = 'compliance_audit',
+  COMMERCIAL_MATRIX = 'commercial_matrix'
 }
 
 export interface ChatMessage {

@@ -6,10 +6,14 @@
   "scripts": {
     "dev": "tsx server.ts",
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
-    "start": "node dist/server.cjs"
+    "start": "node dist/server.cjs",
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@google/genai": "^1.41.0",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
+    "@types/three": "^0.186.0",
     "express": "^5.2.1",
     "firebase": "^12.16.0",
     "html-to-image": "^1.11.13",
@@ -18,6 +22,7 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "recharts": "^3.10.1",
+    "three": "^0.186.1",
     "tsx": "^4.21.0"
   },
   "devDependencies": {
