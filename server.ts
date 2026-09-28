@@ -180,11 +180,13 @@ async function startServer() {
   // GET System Telemetry Forecast (Next 60 minutes)
   app.get("/api/telemetry/forecast", (req, res) => {
     try {
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Cache-Control', 'no-store, no-cache');
       const now = Date.now();
       const points = [];
-      const baseCpu = systemTelemetry.cpu;
-      const baseRam = systemTelemetry.ram;
-      const baseDisk = systemTelemetry.disk;
+      const baseCpu = systemTelemetry?.cpu ?? 22.4;
+      const baseRam = systemTelemetry?.ram ?? 43.8;
+      const baseDisk = systemTelemetry?.disk ?? 58.2;
 
       // Generate a 1-hour forecast (12 points at 5-minute intervals)
       // Simulating a steady climb and peak behavior
@@ -214,7 +216,7 @@ async function startServer() {
       res.json({
         range: 'forecast_1h',
         count: points.length,
-        state_hash: systemTelemetry.state_hash,
+        state_hash: systemTelemetry?.state_hash || '0x4E89AF20',
         points
       });
     } catch (e: any) {

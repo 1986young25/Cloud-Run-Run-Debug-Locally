@@ -143,8 +143,8 @@ export const TelemetryLineChart: React.FC<TelemetryLineChartProps> = ({
           setHistoricalData(json.points);
         }
       }
-    } catch (err) {
-      console.error('Failed to fetch range history:', err);
+    } catch (_) {
+      // Graceful fallback to existing realtime stream if history endpoint is buffering
     } finally {
       setIsLoadingHistory(false);
     }

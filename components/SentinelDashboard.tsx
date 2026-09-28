@@ -629,6 +629,9 @@ const SentinelDashboard: React.FC<SentinelDashboardProps> = ({ onNavigate }) => 
         {/* 1H Predictive Forecast Chart */}
         <TelemetryForecastChart 
           thresholdConfig={thresholdConfig} 
+          currentCpu={systemTelemetry.cpu}
+          currentRam={systemTelemetry.ram}
+          currentDisk={systemTelemetry.disk}
           onForecastWarning={(msg, level) => {
             addSystemLog(level, msg, 'predictive_engine');
             showToast(msg, level);
