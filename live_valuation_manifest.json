@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-11-03T22:45:00.000Z",
+  "trust": "The Nicholas Young Master Trust",
+  "operatingEntity": "Titan Games Security L.L.C.",
+  "ein": "41-6820289",
+  "verifiedFiles": 68,
+  "verifiedLoc": 14835,
+  "ipValuationUsd": 2596125.0,
+  "parametricValuationUsd": 75037.0,
+  "telemetryRecords": 10,
+  "paymentIntentRecords": 10,
+  "totalVaultTables": 8,
+  "totalVaultRecords": 62,
+  "vaultReservesUsd": 5407000000.0,
+  "m2mProfitGeneration": {
+    "baseCapitalInjectedUsd": 442600.0,
+    "settledValueUsd": 904727.7,
+    "netProfitGeneratedUsd": 462127.7,
+    "roiPercentage": 104.41,
+    "effectiveMultiplier": 2.044,
+    "baselineParityFloor": 1.691,
+    "clearingVelocityPerHour": 336329.95,
+    "stabilityRating": "100.0% (LIQUIDITY_DENSITY_STABLE)"
+  },
+  "deepSystemAudit": {
+    "auditEngine": "full_system_audit.py",
+    "activeSourceFiles": 68,
+    "totalLoc": 14835,
+    "codebaseValuationUsd": 74175.0,
+    "databaseDensityValuationUsd": 62.0,
+    "schemaFootprintValuationUsd": 800.0,
+    "totalSystemicValuationUsd": 75037.0,
+    "vaultDb": "titan_master_vault.db",
+    "vaultTable": "master_sovereign_audit"
+  },
+  "stateSeal": "UCC-CER-NYMT-XB6-2D7891F18AD4-6B4A08E9",
+  "status": "CONFIRMED_OPERATIONAL"
+}

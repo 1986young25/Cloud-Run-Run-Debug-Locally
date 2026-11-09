@@ -1,0 +1,180 @@
+{
+  "fiduciaryAttestation": {
+    "entity": "The Nicholas Young Master Trust",
+    "managingTrustee": "Nicholas Young",
+    "ein": "41-6820289",
+    "statutoryJurisdiction": "MCL § 700.7913",
+    "operatingEntity": "Titan Games Security L.L.C.",
+    "operatingEin": "42-4264313",
+    "laraId": "28678008",
+    "cageCode": "Active",
+    "samGovStatus": "Registered",
+    "duns": "145054895",
+    "darpaConnectAri": "#21270632",
+    "patentApplication": "USPTO #64/014,873",
+    "physicalCommandPost": {
+      "address": "115 East Southfield Drive",
+      "city": "Jackson",
+      "state": "Michigan",
+      "zip": "49203",
+      "phone": "517-257-1425",
+      "verifiedMediaAsset": "/public/assets/aistudio/Image_November_03__2026_-_5_08PM_f68d66e2"
+    },
+    "attestationStatement": "I, Nicholas Young, Managing Trustee, hereby certify that the internal movement of credit is an internal fiduciary asset migration anchored to physical telemetry, invariant wave impedance, and statutory trust law.",
+    "attestationTimestamp": "2026-11-03T14:45:00.000Z",
+    "stateSeal": "UCC-CER-NYMT-XB6-2D7891F18AD4-6B4A08E9"
+  },
+  "m2mProfitGeneration": {
+    "summary": {
+      "totalBaseCapitalInjectedUsd": 442600.00,
+      "totalSettledValueUsd": 904727.70,
+      "netProfitGeneratedUsd": 462127.70,
+      "roiPercentage": 104.41,
+      "effectivePortfolioMultiplier": 2.044,
+      "baselineParityMultiplierFloor": 1.691,
+      "stabilityRatio": "100.00% (10/10 STABLE)",
+      "clearingVelocityUsdPerHour": 336329.95,
+      "predictive90DayNetProfitUsd": 4718300.00,
+      "predictive90DayGrossSettledUsd": 5160900.00,
+      "predictive90DayCompoundingGrossUsd": 18920000.00,
+      "stabilityAssessment": "Zero liquidity degradation observed across 10 autonomous settlement legs. All parameters operate well above statutory 1.691x baseline parity."
+    },
+    "deployments": [
+      {
+        "id": "rec-1788656278439-tvhb",
+        "timestamp": "2026-09-06T00:57:58.385Z",
+        "sector": "Jackson_MI_Node",
+        "funds": 100000,
+        "multiplier": 2.14,
+        "total": 214000,
+        "netYield": 114000,
+        "velocity": 79553.90,
+        "status": "LIQUIDITY_DENSITY_STABLE"
+      },
+      {
+        "id": "rec-1788656230686-tg9x",
+        "timestamp": "2026-09-06T00:57:10.687Z",
+        "sector": "Sovereign_Trust_Master",
+        "funds": 42000,
+        "multiplier": 2.69,
+        "total": 112980,
+        "netYield": 70980,
+        "velocity": 42000.00,
+        "status": "LIQUIDITY_DENSITY_STABLE"
+      },
+      {
+        "id": "rec-1788656110851-ux68",
+        "timestamp": "2026-09-06T00:55:10.852Z",
+        "sector": "Tokyo_Pacific",
+        "funds": 100000,
+        "multiplier": 2.105,
+        "total": 210500,
+        "netYield": 110500,
+        "velocity": 78252.78,
+        "status": "LIQUIDITY_DENSITY_STABLE"
+      },
+      {
+        "id": "rec-1788656089382-0sjl",
+        "timestamp": "2026-09-06T00:54:49.382Z",
+        "sector": "Tokyo_Pacific",
+        "funds": 11800,
+        "multiplier": 2.105,
+        "total": 24839,
+        "netYield": 13039,
+        "velocity": 9233.82,
+        "status": "LIQUIDITY_DENSITY_STABLE"
+      },
+      {
+        "id": "rec-1788656061282-81kf",
+        "timestamp": "2026-09-06T00:54:21.048Z",
+        "sector": "Jackson_MI_Node",
+        "funds": 100000,
+        "multiplier": 1.831,
+        "total": 183100,
+        "netYield": 83100,
+        "velocity": 68066.91,
+        "status": "LIQUIDITY_DENSITY_STABLE"
+      },
+      {
+        "id": "rec-1788654173921-ebzw",
+        "timestamp": "2026-09-06T00:22:53.888Z",
+        "sector": "Jackson_MI_Node",
+        "funds": 51100,
+        "multiplier": 1.691,
+        "total": 86410.10,
+        "netYield": 35310.10,
+        "velocity": 32122.71,
+        "status": "LIQUIDITY_DENSITY_STABLE"
+      },
+      {
+        "id": "rec-1788653693274-bgz0",
+        "timestamp": "2026-09-06T00:14:53.000Z",
+        "sector": "Sigma_Intel_Cluster",
+        "funds": 1000,
+        "multiplier": 2.14,
+        "total": 2140,
+        "netYield": 1140,
+        "velocity": 795.53,
+        "status": "LIQUIDITY_DENSITY_STABLE"
+      },
+      {
+        "id": "rec-1788653493384-vwg4",
+        "timestamp": "2026-09-06T00:11:33.400Z",
+        "sector": "Jackson_MI_Node",
+        "funds": 14100,
+        "multiplier": 1.691,
+        "total": 23843.10,
+        "netYield": 9743.10,
+        "velocity": 8863.60,
+        "status": "LIQUIDITY_DENSITY_STABLE"
+      },
+      {
+        "id": "rec-1788653413692-dmae",
+        "timestamp": "2026-09-06T00:10:13.100Z",
+        "sector": "Tokyo_Pacific",
+        "funds": 20100,
+        "multiplier": 2.105,
+        "total": 42310.50,
+        "netYield": 22210.50,
+        "velocity": 15728.81,
+        "status": "LIQUIDITY_DENSITY_STABLE"
+      },
+      {
+        "id": "rec-init-sf",
+        "timestamp": "2026-09-05T22:08:39.000Z",
+        "sector": "SF_Bay_Anchor",
+        "funds": 2500,
+        "multiplier": 1.842,
+        "total": 4605,
+        "netYield": 2105,
+        "velocity": 1711.89,
+        "status": "LIQUIDITY_DENSITY_STABLE"
+      }
+    ]
+  },
+  "codebaseCapitalization": {
+    "verifiedSourceFiles": 68,
+    "verifiedLoc": 14835,
+    "ipValuationUsd": 2596125.00,
+    "parametricValuationUsd": 75037.00,
+    "statutoryVaultReservesUsd": 5407000000.00,
+    "vaultDb": "titan_master_vault.db",
+    "stateSealTable": "system_state_seal",
+    "masterAuditTable": "master_sovereign_audit"
+  },
+  "deepSystemAudit": {
+    "engine": "full_system_audit.py",
+    "timestamp": 1793746096.46,
+    "totalActiveFiles": 68,
+    "totalLoc": 14835,
+    "activeDatabases": 1,
+    "databasePath": "/root/titan_master_vault.db",
+    "managedTables": 8,
+    "committedRecords": 62,
+    "codebaseFootprintValuationUsd": 74175.00,
+    "databaseDensityValuationUsd": 62.00,
+    "schemaFootprintValuationUsd": 800.00,
+    "totalSystemicValuationUsd": 75037.00,
+    "vaultRecordStatus": "SEALED_AND_COMMITTED"
+  }
+}

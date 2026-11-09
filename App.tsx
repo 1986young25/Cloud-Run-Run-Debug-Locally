@@ -18,8 +18,26 @@ import { AcousticWaveEnclave } from './components/AcousticWaveEnclave';
 import { GoogleClassroomPanel } from './components/GoogleClassroomPanel';
 import { auditStore } from './utils/auditStore';
 
+const getInitialTab = (): AppTab => {
+  const hash = window.location.hash.replace('#', '') as AppTab;
+  if (Object.values(AppTab).includes(hash)) {
+    return hash;
+  }
+  const saved = localStorage.getItem('titan_active_tab') as AppTab;
+  if (saved && Object.values(AppTab).includes(saved)) {
+    return saved;
+  }
+  return AppTab.ACOUSTIC_WAVE;
+};
+
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<AppTab>(AppTab.SENTINEL);
+  const [activeTab, setActiveTabState] = useState<AppTab>(getInitialTab);
+
+  const setActiveTab = (tab: AppTab) => {
+    setActiveTabState(tab);
+    localStorage.setItem('titan_active_tab', tab);
+    window.location.hash = tab;
+  };
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
